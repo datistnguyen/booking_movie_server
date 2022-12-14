@@ -58,10 +58,10 @@ const updateFilm = expressAsyncHandler(async (req, res) => {
 const detailFilm= expressAsyncHandler(async (req, res)=> {
   try {
     const {id} =req.query
-    const detail= await Film.findAll({id: id})
-    const [rows]= await connection.query("SELECT cinemas.cinemaName, clusters.id, clusters.ClusterName, clusters.address, clusters.img FROM cinemas INNER JOIN films ON films.CinemaId = cinemas.id INNER JOIN clusters ON clusters.id = cinemas.clusterId")
+    const [details]= await connection.query("SELECT * FROM films WHERE films.id= ?", [id])
+    const [rows]= await connection.query("SELECT cinemas.cinemaName, clusters.id, clusters.ClusterName, clusters.address, clusters.img FROM cinemas INNER JOIN films ON films.CinemaId = cinemas.id INNER JOIN clusters ON clusters.id = cinemas.clusterId WHERE films.id= ?", [id])
     console.log(rows)
-    return res.status(200).json({data: detail[0], cluster: rows})
+    return res.status(200).json({data: details[0], cluster: rows})
   } catch (error) {
     return res.status(404).json(error.message);
   }
