@@ -10,6 +10,7 @@ const User = require("./user.model");
 const createassociation = () => {
   Cluster.hasMany(Cinema);
   Cinema.hasMany(Film);
+  Cinema.belongsTo(Cluster)
   Cinema.hasMany(Room);
   Room.belongsTo(Cinema);
 

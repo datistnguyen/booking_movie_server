@@ -13,6 +13,8 @@ const clusterRoute = require("./routes/cluster.route");
 const bannerRoute = require("./routes/banner.route");
 const booksRoute = require("./routes/book.route");
 const playTimeRoute = require("./routes/playTime.route");
+const discountRoute= require("./routes/discount.route")
+const commentRoute= require("./routes/comment.route")
 const { createassociation } = require("./models");
 
 const app = express();
@@ -26,6 +28,8 @@ app.use(
     extended: true,
   })
 );
+connectDB();
+createassociation();
 app.get("/", (req, res) => {
   return res.json("oke");
 });
@@ -37,11 +41,12 @@ app.use("/cluster", clusterRoute);
 app.use("/banner", bannerRoute);
 app.use("/book", booksRoute);
 app.use("/playtime", playTimeRoute);
+app.use("/discount", discountRoute)
+app.use("/comment", commentRoute )
 
 app.get("/seed", seedDb);
 app.post("/seedAdmin", seedAdmin);
-connectDB();
-createassociation();
+
 const port = process.env.PORT || 8081;
 
 app.listen(port, () => {

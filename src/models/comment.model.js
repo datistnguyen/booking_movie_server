@@ -7,6 +7,7 @@ class Comment extends Model {
   userId;
   content;
   filmId;
+  rate
 }
 
 Comment.init(
@@ -25,6 +26,9 @@ Comment.init(
     filmId: {
       type: DataTypes.INTEGER,
     },
+    rate: {
+      type: DataTypes.INTEGER
+    }
   },
   {
     sequelize,

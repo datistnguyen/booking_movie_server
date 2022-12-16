@@ -19,7 +19,8 @@ class Film extends Model {
   CinemaId;
   state;
   limitAge;
-  trailer
+  trailer;
+  director
 }
 
 Film.init(
@@ -80,6 +81,9 @@ Film.init(
     state: {
       type: DataTypes.STRING,
     },
+    director: {
+      type: DataTypes.STRING
+    }
   },
   {
     sequelize,

@@ -44,8 +44,8 @@ const deleteRoom = expressAsyncHandler(async (req, res) => {
 
 const getRoomByCinema= expressAsyncHandler(async (req, res)=> {
   try {
-    const {idCinema}= req.params
-    const [rows]= await connection.execute("SELECT rooms.id, rooms.seat, rooms.seated, rooms.address, rooms.RoomName FROM rooms INNER JOIN cinemas ON rooms.cinemaId = cinemas.id WHERE rooms.cinemaId= ?", [idCinema])
+    const {idCinema, idFilm}= req.params
+    const [rows]= await connection.execute("SELECT rooms.id, rooms.seat, rooms.seated, rooms.address, rooms.RoomName FROM rooms INNER JOIN cinemas ON rooms.cinemaId = cinemas.id WHERE rooms.cinemaId= ? AND rooms.filmId= ?", [idCinema, idFilm])
     const roomChosen= rows?.find(item=> parseInt(item?.seated) < parseInt(item?.seat))
     const [seated]= await connection.execute("SELECT seatIndex FROM books WHERE id_room= ?", [roomChosen?.id])
     return res.status(200).json({roomChosen: roomChosen, seated: seated})
@@ -54,10 +54,35 @@ const getRoomByCinema= expressAsyncHandler(async (req, res)=> {
     
   }
 })
+
+const detailRoom= expressAsyncHandler(async( req, res)=> {
+  try {
+    const {id}= req.params
+    const [detailRoom]= await connection.execute("SELECT rooms.id, rooms.seat, rooms.address, rooms.RoomName, cinemas.cinemaName, rooms.cinemaId FROM rooms INNER JOIN cinemas ON cinemas.id = rooms.cinemaId WHERE rooms.id= ?", [id])
+    return res.status(200).json(detailRoom[0])
+  } catch (error) {
+    return res.status(404).json(error.message)
+  }
+})
+
+const updateRoom= expressAsyncHandler(async (req, res)=> {
+  try {
+    const cinema = await Room.update(
+      { ...req.body },
+      { where: { id: req.params.id } }
+    );
+
+    return res.json(cinema);
+  } catch (error) {
+    return res.status(404).json(error.message);
+  }
+})
 module.exports = {
   createRoom,
   deleteRoom,
   getAllRoomByCinema,
   getAllRoom,
-  getRoomByCinema
+  getRoomByCinema,
+  detailRoom,
+  updateRoom
 };

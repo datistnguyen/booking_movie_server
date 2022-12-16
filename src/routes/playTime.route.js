@@ -14,6 +14,6 @@ const route = Router();
 route.get("/", getAllPlayTime);
 route.post("/create", createPlayTime);
 route.patch("/update/:id", updatePlayTime);
-route.get("/detail/playtimes/:cinemaId", getDetailPlayTimeByCluster)
+route.get("/detail/playtimes/:filmId", getDetailPlayTimeByCluster)
 
 module.exports = route;

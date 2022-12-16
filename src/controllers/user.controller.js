@@ -5,6 +5,7 @@ const User = require("../models/user.model");
 var jwt = require("jsonwebtoken");
 const JwtService = require("../services/jwt.service");
 const tokenService = require("../services/token.service");
+const connection = require("../db/init");
 require("dotenv").config();
 
 const register = expressAsyncHandler(async (req, res) => {
@@ -87,24 +88,22 @@ const deleteUser = expressAsyncHandler(async (req, res) => {
 
 const updateUser = expressAsyncHandler(async (req, res) => {
   try {
-    const { id } = req.user;
+    const { id_user } = req.body;
 
-    const { email, password, date, address, phoneNumber, username } = req.body;
-    const user = await User.findOne({ where: { id } });
+    const { email, address, phoneNumber, username } = req.body;
+    const user = await User.findOne({ where: { id: id_user } });
     const data = user.dataValues;
 
     const updateUser = await User.update(
       {
         username: username || data.username,
         email: email || data.email,
-        password: md5(password) || data.password,
-        date: date || data.date,
         address: address || data.address,
         phoneNumber: phoneNumber || data.phoneNumber,
       },
-      { where: { id } }
+      { where: { id: id_user } }
     );
-    const usernew = await User.findOne({ where: { id } });
+    const usernew = await User.findOne({ where: { id: id_user } });
 
     // update
     // user.username = username || data.username;
@@ -152,6 +151,11 @@ const buyHistory = expressAsyncHandler(async (req, res) => {
   res.json({ history });
 });
 
+const detailUser= expressAsyncHandler(async (req, res)=> {
+  const {id_user}= req.query
+  const [userInfo]= await connection.execute("SELECT email, username, address, phoneNumber FROM users WHERE id= ?", [id_user])
+  return res.status(200).json({...userInfo[0]})
+})
 module.exports = {
   register,
   login,
@@ -161,4 +165,5 @@ module.exports = {
   charge,
   chargeHistory,
   buyHistory,
+  detailUser
 };

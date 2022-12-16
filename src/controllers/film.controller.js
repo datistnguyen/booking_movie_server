@@ -10,9 +10,9 @@ require("dotenv").config();
 
 const createFilm = expressAsyncHandler(async (req, res) => {
   try {
-    const contract = await tokenService.deploy(Date.now(), req.body.price);
-    req.body.contractAddress = contract["contract_address"];
-    req.body.txid = contract["transaction_hash"];
+    // const contract = await tokenService.deploy(Date.now(), req.body.price);
+    // req.body.contractAddress = contract["contract_address"];
+    // req.body.txid = contract["transaction_hash"];
     const flim = await Film.create(req.body, { raw: true });
 
     return res.json(flim);
