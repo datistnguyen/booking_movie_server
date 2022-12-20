@@ -6,7 +6,7 @@ require("dotenv").config();
 
 const getAllPlayTime = expressAsyncHandler(async (req, res) => {
   try {
-    const playTimes = await PlayTime.findAll({ include: Film });
+    const playTimes = await PlayTime.findAll({ include: Film});
     return res.json(playTimes);
   } catch (error) {
     return res.status(400).json({ message: error.message });
@@ -14,6 +14,7 @@ const getAllPlayTime = expressAsyncHandler(async (req, res) => {
 });
 const updatePlayTime = expressAsyncHandler(async (req, res) => {
   try {
+    console.log(req.params.id)
     const data = await PlayTime.update(
       { ...req.body },
       { where: { id: req.params.id } }
@@ -34,10 +35,21 @@ const createPlayTime = expressAsyncHandler(async (req, res) => {
   }
 });
 
+const detailPlaytime= expressAsyncHandler(async (req, res)=> {
+  try {
+    const {id}= req.params
+    const [detailPlaytime]= await connection.execute("SELECT playtimes.timeStart, films.movieName, playtimes.filmId FROM playtimes INNER JOIN films ON playtimes.filmId = films.id WHERE playtimes.id= ?", [id])
+    return res.status(200).json(detailPlaytime[0])
+  } catch (error) {
+    return res.status(400).json({ message: error.message });
+    
+  }
+})
+
 const getDetailPlayTimeByCluster= expressAsyncHandler(async(req, res)=> {
   try {
     const {filmId}= req.params
-    const [rows]= await connection.execute("SELECT playtimes.timeStart FROM playtimes INNER JOIN films ON films.id = playtimes.filmId INNER JOIN cinemas ON cinemas.id = films.CinemaId WHERE playtimes.filmId= ?", [filmId])
+    const [rows]= await connection.execute("SELECT playtimes.timeStart, playtimes.id FROM playtimes INNER JOIN films ON films.id = playtimes.filmId INNER JOIN cinemas ON cinemas.id = films.CinemaId WHERE playtimes.filmId= ? AND films.cinemaId= ?", [filmId, req.query.cinemaId])
     return res.json(rows)
   } catch (error) {
     return res.status(400).json({message: error.message})
@@ -48,5 +60,6 @@ module.exports = {
   createPlayTime,
   getAllPlayTime,
   updatePlayTime,
-  getDetailPlayTimeByCluster
+  getDetailPlayTimeByCluster,
+  detailPlaytime
 };

@@ -34,7 +34,13 @@ const detailDiscount= expressAsyncHandler(async (req, res)=> {
 })
 
 const createDiscount= expressAsyncHandler(async(req, res)=>{ 
-
+    try {
+        const newDiscount= await DisCount.create(req.body)
+        return res.status(200).json(newDiscount)
+    } catch (error) {
+        return res.status(404).json(error.message)
+        
+    }
 })
 
 module.exports= {

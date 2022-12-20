@@ -3,6 +3,7 @@ const connection = require("../db/init");
 const Cinema = require("../models/Cinema.model");
 const Cluster = require("../models/cluster.model");
 const Film = require("../models/film.model");
+const PlayTime = require("../models/PlayTime.model");
 
 const createCluster = expressAsyncHandler(async (req, res) => {
   try {
@@ -16,7 +17,7 @@ const createCluster = expressAsyncHandler(async (req, res) => {
 const getAllCluster = expressAsyncHandler(async (req, res) => {
   try {
     const data = await Cluster.findAll({
-      include: [{ model: Cinema, include: Film}],
+      include: [{ model: Cinema, include: [{model: Film, include: PlayTime}]}],
     });
     return res.json(data);
   } catch (error) {

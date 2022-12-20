@@ -48,7 +48,11 @@ Book.init(
       type: DataTypes.STRING,
     },
     idFilm: {
-      type: DataTypes.INTEGER
+      type: DataTypes.INTEGER,
+      references: {
+        model: "Film",
+        key: "id",
+      },
     },
     id_room: {
       type: DataTypes.INTEGER

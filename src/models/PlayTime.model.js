@@ -1,14 +1,13 @@
 const { Model, DataTypes } = require("sequelize");
 const { sequelize } = require("../connect/sequelize");
-const Cluster = require("./cluster.model");
-const Film = require("./film.model");
+// const Cluster = require("./cluster.model");
+// const Film = require("./film.model");
 
 class PlayTime extends Model {
   id;
-  beginTime;
   timeStart;
   filmId;
-  roomId;
+  // cinemaId;
 }
 
 PlayTime.init(
@@ -22,9 +21,6 @@ PlayTime.init(
       type: DataTypes.DATE,
       allowNull: false,
     },
-    beginTime: {
-      type: DataTypes.INTEGER,
-    },
     filmId: {
       type: DataTypes.INTEGER,
       references: {
@@ -33,14 +29,14 @@ PlayTime.init(
       },
       allowNull: false,
     },
-    roomId: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: "rooms",
-        key: "id",
-      },
-      allowNull: false,
-    },
+    // cinemaId: {
+    //   type: DataTypes.INTEGER,
+    //   references: {
+    //     model: "cinemas",
+    //     key: "id",
+    //   },
+    //   allowNull: true,
+    // },
   },
   {
     sequelize,

@@ -59,7 +59,7 @@ const deleteCinema = expressAsyncHandler(async (req, res) => {
 
 const detailCinema= expressAsyncHandler(async(req, res)=> {
   try {
-    const {id }= req.params;
+    const {id }= req.params || "";
     const detail= await Cinema.findAll({id: id, include: {model: Cluster}})
     return res.status(200).json(detail[0])
   } catch (error) {

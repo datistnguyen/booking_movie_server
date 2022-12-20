@@ -44,11 +44,23 @@ const deleteRoom = expressAsyncHandler(async (req, res) => {
 
 const getRoomByCinema= expressAsyncHandler(async (req, res)=> {
   try {
+    let roomChosen
     const {idCinema, idFilm}= req.params
-    const [rows]= await connection.execute("SELECT rooms.id, rooms.seat, rooms.seated, rooms.address, rooms.RoomName FROM rooms INNER JOIN cinemas ON rooms.cinemaId = cinemas.id WHERE rooms.cinemaId= ? AND rooms.filmId= ?", [idCinema, idFilm])
-    const roomChosen= rows?.find(item=> parseInt(item?.seated) < parseInt(item?.seat))
-    const [seated]= await connection.execute("SELECT seatIndex FROM books WHERE id_room= ?", [roomChosen?.id])
-    return res.status(200).json({roomChosen: roomChosen, seated: seated})
+    const [rows]= await connection.execute("SELECT rooms.id, rooms.seat, rooms.seated, rooms.address, rooms.RoomName FROM rooms INNER JOIN cinemas ON rooms.cinemaId = cinemas.id WHERE rooms.cinemaId= ?", [idCinema || ""])
+    roomChosen= rows?.find(item=> parseInt(item?.seated) < parseInt(item?.seat)) || [{seat: 0}]
+    if(roomChosen.seat === undefined) {
+      console.log(123456789)
+      const [updateRoom]= await connection.execute("UPDATE rooms SET cinemaId= ? WHERE cinemaId IS NULL LIMIT 1", [idCinema])
+      const [rows2]= await connection.execute("SELECT rooms.id, rooms.seat, rooms.seated, rooms.address, rooms.RoomName FROM rooms INNER JOIN cinemas ON rooms.cinemaId = cinemas.id WHERE rooms.cinemaId= ?", [idCinema || ""])
+      const roomChosen2= rows2?.find(item=> parseInt(item?.seated) < parseInt(item?.seat)) || [{seat: 0}]
+      roomChosen= roomChosen2
+      console.log("roomChosen2", roomChosen2)
+    }
+    else {
+      console.log(1234567)
+    }
+    const [seated]= await connection.execute("SELECT seatIndex FROM books WHERE id_room= ?", [roomChosen?.id || ""])
+    return res.status(200).json({roomChosen: roomChosen, seated: seated, rows})
   } catch (error) {
     return res.status(404).json(error.message)
     

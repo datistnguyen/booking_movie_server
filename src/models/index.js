@@ -18,12 +18,10 @@ const createassociation = () => {
   Film.hasMany(PlayTime);
 
   Book.belongsTo(PlayTime);
-  Book.belongsTo(User);
-
+  Book.belongsTo(User)
   //playTime
 
   PlayTime.belongsTo(Film);
-  PlayTime.belongsTo(Room);
 };
 
 module.exports = {
