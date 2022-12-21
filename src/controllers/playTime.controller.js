@@ -49,7 +49,7 @@ const detailPlaytime= expressAsyncHandler(async (req, res)=> {
 const getDetailPlayTimeByCluster= expressAsyncHandler(async(req, res)=> {
   try {
     const {filmId}= req.params
-    const [rows]= await connection.execute("SELECT playtimes.timeStart, playtimes.id FROM playtimes INNER JOIN films ON films.id = playtimes.filmId INNER JOIN cinemas ON cinemas.id = films.CinemaId WHERE playtimes.filmId= ? AND films.cinemaId= ?", [filmId, req.query.cinemaId])
+    const [rows]= await connection.execute("SELECT DISTINCT playtimes.timeStart, playtimes.id FROM playtimes INNER JOIN films ON films.id = playtimes.filmId INNER JOIN cinemas ON cinemas.id = films.CinemaId WHERE playtimes.filmId= ? AND films.cinemaId= ?", [filmId, req.query.cinemaId])
     return res.json(rows)
   } catch (error) {
     return res.status(400).json({message: error.message})

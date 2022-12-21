@@ -9,7 +9,6 @@ class Room extends Model {
   cinemaId;
   seat;
   seated;
-  filmId;
 }
 
 Room.init(
@@ -36,9 +35,6 @@ Room.init(
       type: DataTypes.INTEGER,
     },
     seated: {
-      type: DataTypes.INTEGER
-    },
-    filmId: {
       type: DataTypes.INTEGER
     }
   },

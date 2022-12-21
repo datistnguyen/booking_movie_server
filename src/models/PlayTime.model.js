@@ -7,6 +7,7 @@ class PlayTime extends Model {
   id;
   timeStart;
   filmId;
+  roomId;
   // cinemaId;
 }
 
@@ -29,6 +30,14 @@ PlayTime.init(
       },
       allowNull: false,
     },
+    roomId: {
+      type: DataTypes.INTEGER, 
+      references: {
+        model: "rooms",
+        key: "id",
+      },
+      allowNull: false,
+    }
     // cinemaId: {
     //   type: DataTypes.INTEGER,
     //   references: {

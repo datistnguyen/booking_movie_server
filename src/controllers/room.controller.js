@@ -45,13 +45,18 @@ const deleteRoom = expressAsyncHandler(async (req, res) => {
 const getRoomByCinema= expressAsyncHandler(async (req, res)=> {
   try {
     let roomChosen
+    let timeStart
+    // eslint-disable-next-line
     const {idCinema, idFilm}= req.params
-    const [rows]= await connection.execute("SELECT rooms.id, rooms.seat, rooms.seated, rooms.address, rooms.RoomName FROM rooms INNER JOIN cinemas ON rooms.cinemaId = cinemas.id WHERE rooms.cinemaId= ?", [idCinema || ""])
+    const [rows]= await connection.execute("SELECT playtimes.timeStart, rooms.id, rooms.seat, rooms.seated, rooms.address, rooms.RoomName FROM playtimes INNER JOIN rooms ON rooms.id = playtimes.roomId WHERE playtimes.filmId= ? AND rooms.cinemaId= ?", [idFilm || "", idCinema || ""])
+    timeStart= rows[0]?.timeStart
     roomChosen= rows?.find(item=> parseInt(item?.seated) < parseInt(item?.seat)) || [{seat: 0}]
     if(roomChosen.seat === undefined) {
-      console.log(123456789)
-      const [updateRoom]= await connection.execute("UPDATE rooms SET cinemaId= ? WHERE cinemaId IS NULL LIMIT 1", [idCinema])
-      const [rows2]= await connection.execute("SELECT rooms.id, rooms.seat, rooms.seated, rooms.address, rooms.RoomName FROM rooms INNER JOIN cinemas ON rooms.cinemaId = cinemas.id WHERE rooms.cinemaId= ?", [idCinema || ""])
+      // const [updateRoom]= await connection.execute("UPDATE rooms SET cinemaId= ? WHERE cinemaId IS NULL LIMIT 1", [idCinema])
+      const [roomEmpty]= await connection.execute("SELECT rooms.id FROM rooms WHERE rooms.cinemaId= ? AND seated= 0", [idCinema || ""])
+      const [newInsert]= await connection.execute("INSERT INTO playtimes(timeStart, filmId, roomId) VALUES (?, ?, ?)", [timeStart || "", idFilm || "", roomEmpty[0].id || ""])
+      const [rows2]= await connection.execute("SELECT rooms.id, rooms.seat, rooms.seated, rooms.address, rooms.RoomName FROM playtimes INNER JOIN rooms ON rooms.id = playtimes.roomId WHERE playtimes.filmId= ? AND rooms.cinemaId= ?", [idFilm || "", idCinema || ""])
+      console.log("rows2: ", rows2)
       const roomChosen2= rows2?.find(item=> parseInt(item?.seated) < parseInt(item?.seat)) || [{seat: 0}]
       roomChosen= roomChosen2
       console.log("roomChosen2", roomChosen2)
@@ -60,9 +65,9 @@ const getRoomByCinema= expressAsyncHandler(async (req, res)=> {
       console.log(1234567)
     }
     const [seated]= await connection.execute("SELECT seatIndex FROM books WHERE id_room= ?", [roomChosen?.id || ""])
-    return res.status(200).json({roomChosen: roomChosen, seated: seated, rows})
+    return res.status(200).json({roomChosen: roomChosen || [], seated: seated, rows})
   } catch (error) {
-    return res.status(404).json(error.message)
+    return res.status(200).json({msg: error.message, runout: true})
     
   }
 })
