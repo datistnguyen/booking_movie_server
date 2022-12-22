@@ -20,8 +20,20 @@ const getAllComment= expressAsyncHandler(async(req, res)=> {
         return res.status(404).json(error.message)
     }
 })
+const getDetailComment= expressAsyncHandler(async(req, res)=> {
+    try {
+        const { id}= req.params
+        const [rows]= await connection.execute("SELECT comments.content,comments.rate, users.username, comments.createdAt FROM comments INNER JOIN users ON users.id = comments.userId WHERE comments.userId= ? AND comments.filmId= ?", [id, req.query.idFilm])
+        return res.status(200).json(rows)
+        
+    } catch (error) {
+        return res.status(404).json(error.message)
+        
+    }
+})
 
 module.exports= {
     createComment,
-    getAllComment
+    getAllComment,
+    getDetailComment
 }
