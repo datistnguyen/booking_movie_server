@@ -11,7 +11,8 @@ class Book extends Model {
   txId;
   idFilm;
   id_room;
-  id_book
+  id_book;
+  time_created
 }
 
 Book.init(
@@ -58,6 +59,9 @@ Book.init(
       type: DataTypes.INTEGER
     },
     id_book: {
+      type: DataTypes.STRING
+    },
+    time_created: {
       type: DataTypes.STRING
     }
   },

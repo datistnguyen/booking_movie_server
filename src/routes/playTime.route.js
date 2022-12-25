@@ -18,5 +18,4 @@ route.patch("/update/:id", updatePlayTime);
 route.get("/detail/:id", detailPlaytime)
 route.get("/detail/playtimes/:filmId", getDetailPlayTimeByCluster)
 
-
 module.exports = route;

@@ -13,7 +13,8 @@ const createassociation = () => {
   Cinema.belongsTo(Cluster)
   Cinema.hasMany(Room);
   Room.belongsTo(Cinema);
-
+  
+  Film.belongsTo(Cinema)
   Film.hasMany(Banner);
   Film.hasMany(PlayTime);
 

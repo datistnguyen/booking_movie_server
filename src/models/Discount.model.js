@@ -20,10 +20,10 @@ DisCount.init(
       primaryKey: true,
     },
     dateStart: {
-      type: DataTypes.DATE,
+      type: DataTypes.STRING,
     },
     dateEnd: {
-      type: DataTypes.DATE,
+      type: DataTypes.STRING,
     },
     filmId: {
       type: DataTypes.INTEGER,

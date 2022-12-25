@@ -47,10 +47,10 @@ Film.init(
     },
 
     dateStart: {
-      type: DataTypes.DATE,
+      type: DataTypes.STRING,
     },
     dateEnd: {
-      type: DataTypes.DATE,
+      type: DataTypes.STRING,
     },
 
     country: {

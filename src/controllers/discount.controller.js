@@ -43,9 +43,20 @@ const createDiscount= expressAsyncHandler(async(req, res)=>{
     }
 })
 
+const discountByFilm= expressAsyncHandler(async(req, res)=> {
+    try {
+        const {idFilm}= req.query
+        const discount= await DisCount.findAll({where: {filmId: idFilm}})
+        return res.status(200).json(discount)
+    } catch (error) {
+        return res.status(404).json(error.message)
+    }
+})
+
 module.exports= {
     getAllDiscount,
     updateDiscount,
     detailDiscount,
-    createDiscount
+    createDiscount,
+    discountByFilm
 }

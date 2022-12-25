@@ -1,11 +1,14 @@
 const expressAsyncHandler = require("express-async-handler");
-const md5 = require("md5");
-const { ROLE } = require("../constanis");
+// const md5 = require("md5");
+// const { ROLE } = require("../constanis");
 const Film = require("../models/film.model");
 const Comment = require("../models/comment.model");
 const Banner = require("../models/banner.model");
-const tokenService = require("../services/token.service");
+// const tokenService = require("../services/token.service");
 const connection  = require("../db/init");
+const Cinema = require("../models/Cinema.model");
+const Room = require("../models/rom.model");
+const PlayTime = require("../models/PlayTime.model");
 require("dotenv").config();
 
 const createFilm = expressAsyncHandler(async (req, res) => {
@@ -23,8 +26,7 @@ const createFilm = expressAsyncHandler(async (req, res) => {
 
 const getAllFilm = expressAsyncHandler(async (req, res) => {
   try {
-    const flims = await Film.findAll({ include: Banner });
-
+    const flims = await Film.findAll({ include: [Banner, {model: Cinema, include: Room}, PlayTime] });
     return res.json(flims);
   } catch (error) {
     return res.status(404).json(error.message);
@@ -67,10 +69,19 @@ const detailFilm= expressAsyncHandler(async (req, res)=> {
   }
 })
 
+const playing= expressAsyncHandler(async (req, res)=> {
+  try {
+    const [playingFilm]= await connection.query("SELECT films.movieName, films.dateStart, films.id AS id, films.img AS img FROM films")
+  } catch (error) {
+    
+  }
+})
+
 module.exports = {
   createFilm,
   getAllFilm,
   deleteFilm,
   updateFilm,
-  detailFilm
+  detailFilm, 
+  playing
 };

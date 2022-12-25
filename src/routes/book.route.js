@@ -8,6 +8,7 @@ const {
   getAllBook,
   booking,
   bookingTicket,
+  stats,
 } = require("../controllers/book.controller");
 
 const route = Router();
@@ -20,4 +21,5 @@ route.get("/book/:id", getAllBookById);
 route.get("/", getAllBook);
 route.post("/checkout", booking)
 route.get("/ticket/detail", bookingTicket)
+route.get("/stats", stats)
 module.exports = route;

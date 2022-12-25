@@ -94,6 +94,17 @@ const updateRoom= expressAsyncHandler(async (req, res)=> {
     return res.status(404).json(error.message);
   }
 })
+
+const getAvailableRoom= expressAsyncHandler(async (req, res)=> {
+  try {
+    const {cinemaId}= req.query
+    const [rows]= await connection.execute("SELECT RoomName, id, seat FROM rooms WHERE seated= 0 AND cinemaId= ?", [cinemaId])
+    return res.json(rows)
+  } catch (error) {
+    return res.status(400).json({message: error.message})
+  }
+})
+
 module.exports = {
   createRoom,
   deleteRoom,
@@ -101,5 +112,6 @@ module.exports = {
   getAllRoom,
   getRoomByCinema,
   detailRoom,
-  updateRoom
+  updateRoom,
+  getAvailableRoom
 };

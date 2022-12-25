@@ -19,7 +19,7 @@ PlayTime.init(
       primaryKey: true,
     },
     timeStart: {
-      type: DataTypes.DATE,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     filmId: {

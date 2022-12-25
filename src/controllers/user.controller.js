@@ -156,6 +156,16 @@ const detailUser= expressAsyncHandler(async (req, res)=> {
   const [userInfo]= await connection.execute("SELECT email, username, address, phoneNumber FROM users WHERE id= ?", [id_user])
   return res.status(200).json({...userInfo[0]})
 })
+
+const historyBooking= expressAsyncHandler(async (req, res)=> {
+  try {
+    const {userId}= req.query
+    const [booking]= await connection.execute("SELECT books.seatIndex, books.id_book, books.idFilm, books.playTimeId, films.movieName, films.img, cinemas.address, playtimes.timeStart, cinemas.cinemaName FROM books INNER JOIN films on films.id = books.idFilm INNER JOIN playtimes ON playtimes.id = books.playTimeId INNER JOIN cinemas ON cinemas.id = films.CinemaId WHERE books.userId= ?", [userId])
+    return res.status(200).json(booking)
+  } catch (error) {
+    return res.status(404).json(error.message)
+  }
+})
 module.exports = {
   register,
   login,
@@ -165,5 +175,6 @@ module.exports = {
   charge,
   chargeHistory,
   buyHistory,
-  detailUser
+  detailUser,
+  historyBooking
 };

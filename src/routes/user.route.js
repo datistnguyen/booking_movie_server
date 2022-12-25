@@ -9,7 +9,8 @@ const {
   charge,
   chargeHistory,
   buyHistory,
-  detailUser
+  detailUser,
+  historyBooking
 } = require("../controllers/user.controller");
 
 const authorize = require("../middlewares/auth.middleware");
@@ -26,5 +27,6 @@ route.post("/charge", charge);
 route.post("/chargeHistory", chargeHistory);
 route.post("/buyHistory", buyHistory);
 route.get("/detail", detailUser)
+route.get("/history", historyBooking)
 
 module.exports = route;
