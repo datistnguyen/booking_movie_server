@@ -15,9 +15,20 @@ const booksRoute = require("./routes/book.route");
 const playTimeRoute = require("./routes/playTime.route");
 const discountRoute= require("./routes/discount.route")
 const commentRoute= require("./routes/comment.route")
+const nodemailer = require('nodemailer');
 const { createassociation } = require("./models");
 
 const app = express();
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'datistpham@gmail.com',
+    pass: 'husrccxljeocqbpi'
+  }
+});
+
+
 
 console.log(process.env.PRIVATE_KEY_JWT);
 
@@ -46,7 +57,40 @@ app.use("/comment", commentRoute )
 
 app.get("/seed", seedDb);
 app.post("/seedAdmin", seedAdmin);
-
+app.post("/mail", (req, res)=> {
+  var mailOptions = {
+    from: 'datistpham@gmail.com',
+    to: req.body.email,
+    subject: 'From netflix',
+    html: `<div>
+      <div>
+      <strong>Film: ${req.body.film}</strong></div>
+      <div>
+        <strong>Cinema: ${req.body.cinema}</strong>
+      </div>
+      <div>
+        <strong>Set: ${req.body.set}</strong>
+      </div>
+      <div>
+        <strong>Seat: ${req.body.seat}</strong>
+      </div>
+      <br />
+      <div>
+        <div>Total grand:</div>
+        <strong>${req.body.total} (Included VAT)</strong>
+      </div>
+    </div>`
+  };
+  transporter.sendMail(mailOptions, function(error, info){
+    if (error) {
+      console.log(error);
+      return res.json("")
+    } else {
+      console.log('Email sent: ' + info.response);
+      return res.json("")
+    }
+  });
+})
 const port = process.env.PORT || 8081;
 
 app.listen(port, () => {

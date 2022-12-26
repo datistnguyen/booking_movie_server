@@ -4,7 +4,7 @@ const { getAllDiscount, updateDiscount, detailDiscount, createDiscount, discount
 const route = Router();
 
 route.get("/", getAllDiscount)
-route.get("/update/:id", updateDiscount)
+route.patch("/update/:id", updateDiscount)
 route.get("/detail/:id", detailDiscount)
 route.post("/create", createDiscount)
 route.get("/by/film", discountByFilm)

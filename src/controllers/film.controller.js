@@ -16,7 +16,7 @@ const createFilm = expressAsyncHandler(async (req, res) => {
     // const contract = await tokenService.deploy(Date.now(), req.body.price);
     // req.body.contractAddress = contract["contract_address"];
     // req.body.txid = contract["transaction_hash"];
-    const flim = await Film.create(req.body, { raw: true });
+    // const flim = await Film.create(req.body, { raw: true });
 
     return res.json(flim);
   } catch (error) {
@@ -51,9 +51,13 @@ const updateFilm = expressAsyncHandler(async (req, res) => {
       { where: { id: req.params.id } }
     );
 
-    return res.json(film);
+    return res.status(200).json("");
   } catch (error) {
-    return res.status(404).json(error.message);
+    const film = await Film.update(
+      { ...req.body },
+      { where: { id: req.params.id } }
+    );
+    return res.status(200).json(error.message);
   }
 });
 
