@@ -9,4 +9,5 @@ route.get("/detail/:id", detailDiscount)
 route.post("/create", createDiscount)
 route.get("/by/film", discountByFilm)
 
+
 module.exports= route
